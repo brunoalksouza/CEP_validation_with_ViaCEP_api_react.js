@@ -6,15 +6,20 @@ import api from "../../services/api";
 function Home() {
   const [input, setInput] = useState("");
 
+  const [cep, setCep] = useState({});
+
   async function handleSearch() {
-    if (input == 0 || input.length < 8 || input.length > 8) {
+    if (input === 0 || input.length < 8 || input.length > 8) {
       alert("Digite um CEP valido");
       return;
     }
-    try{
+    try {
       const response = await api.get(`${input}/json/`);
-      const data = await response.json();
-      console.log(data);
+      setCep(response.data);
+      setInput("");
+    } catch {
+      alert("Cep inexistente");
+      setInput("");
     }
   }
 
@@ -35,13 +40,17 @@ function Home() {
         </button>
       </div>
 
-      <main className="main">
-        <h2>CEP: 37514000</h2>
-        <span>Rua Teste</span>
-        <span>Complemento</span>
-        <span>Bairro</span>
-        <span>Campo Grande - MS</span>
-      </main>
+      {Object.keys(cep).length > 0 && (
+        <main className="main">
+          <h2>CEP: {cep.cep}</h2>
+          <span>{cep.logradouro}</span>
+          <span>Complemento: {cep.complemento}</span>
+          <span>Bairro: {cep.bairro}</span>
+          <span>
+            {cep.localidade} - {cep.uf}
+          </span>
+        </main>
+      )}
     </div>
   );
 }

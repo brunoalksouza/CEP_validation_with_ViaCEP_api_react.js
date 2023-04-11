@@ -10,10 +10,12 @@ function Home() {
 
   async function handleSearch() {
     if (input === 0 || input.length < 8 || input.length > 8) {
+      console.log("clique informações incorretas")
       alert("Digite um CEP valido");
       return;
     }
     try {
+      console.log("clique informações corretas")
       const response = await api.get(`${input}/json/`);
       setCep(response.data);
       setInput("");
